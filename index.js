@@ -1,4 +1,5 @@
 const Wechat = require('wechat4u');
+const WechatCore = require('wechat4u/lib/core')
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const CronJob = require('cron').CronJob;
@@ -40,10 +41,13 @@ bot.on('logout', () => {
 });
 
 bot.on('message', msg => {
-    if(msg.Content.indexOf('中秋') !== -1){
-        bot.sendMsg('谢谢，也祝你中秋节快乐！', msg.FromUserName)
-        .catch(err => {
-            bot.emit('send error', err);
-        });
+    if(msg.Content.indexOf('中秋') !== -1 ){
+        // not repy group chat message
+        if(!(msg.FromUserName ? /^@@|@chatroom$/.test(msg.FromUserName) : false)){
+            bot.sendMsg('谢谢，也祝你中秋节快乐！', msg.FromUserName)
+            .catch(err => {
+                bot.emit('send error', err);
+            });
+        }
     }
 })
